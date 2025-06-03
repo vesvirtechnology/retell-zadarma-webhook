@@ -1,6 +1,8 @@
 import express from 'express';
 import fetch from 'node-fetch';
-import { VoiceResponse } from 'twilio';
+import twilio from 'twilio';
+
+const { VoiceResponse } = twilio;
 
 const app = express();
 app.use(express.json());
@@ -19,8 +21,8 @@ app.post('/incoming-call', async (req, res) => {
       },
       body: JSON.stringify({
         agent_id: RETELL_AGENT_ID,
-        direction: 'inbound',
-      }),
+        direction: 'inbound'
+      })
     });
 
     const data = await registerRes.json();
@@ -28,16 +30,22 @@ app.post('/incoming-call', async (req, res) => {
 
     const sipUri = `sip:${call_id}@st4n6j0wnrl.sip.livekit.cloud`;
 
-    const twiml = new VoiceResponse();
-    twiml.dial().sip(sipUri);
+    const response = new VoiceResponse();
+    response.dial().sip(sipUri);
 
-    res.type('text/xml');
-    res.send(twiml.toString());
+    res.set('Content-Type', 'text/xml');
+    res.send(response.toString());
   } catch (error) {
     console.error(error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).send('Error en el servidor');
   }
 });
+
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.log(`Servidor corriendo en puerto ${port}`);
+});
+
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
