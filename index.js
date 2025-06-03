@@ -1,47 +1,27 @@
-const express = require('express');
-const fetch = require('node-fetch');
-const twilio = require('twilio');
-const { VoiceResponse } = twilio;
+import express from 'express';
+import { config } from 'dotenv';
+import { VoiceResponse } from 'twilio';
+
+config();
 
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 
-const RETELL_API_KEY = process.env.RETELL_API_KEY;
-const RETELL_AGENT_ID = process.env.RETELL_AGENT_ID;
-
-app.post('/incoming-call', async (req, res) => {
-  try {
-    const registerRes = await fetch('https://api.retellai.com/v1/call/register-phone-call', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${RETELL_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        agent_id: RETELL_AGENT_ID,
-        direction: 'inbound'
-      })
-    });
-
-    const data = await registerRes.json();
-    const call_id = data.call_id;
-
-    const sipUri = `sip:${call_id}@st4n6j0wnrl.sip.livekit.cloud`;
-
-    const response = new VoiceResponse();
-    response.dial().sip(sipUri);
-
-    res.set('Content-Type', 'text/xml');
-    res.send(response.toString());
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error en el servidor');
-  }
+app.post('/', (req, res) => {
+  const twiml = new VoiceResponse();
+  twiml.say('Conectando con tu asistente de inteligencia artificial.');
+  twiml.connect().stream({
+    url: `wss://api.retellai.com/v1/stream`,
+    name: 'retell-stream',
+    parameters: {
+      agent_id: process.env.RETELL_AGENT_ID,
+      api_key: process.env.RETELL_API_KEY
+    }
+  });
+  res.type('text/xml');
+  res.send(twiml.toString());
 });
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Servidor corriendo en puerto ${port}`);
-});
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Webhook listening on port ${PORT}`));
 
