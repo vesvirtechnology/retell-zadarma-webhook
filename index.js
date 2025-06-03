@@ -1,7 +1,6 @@
-import express from 'express';
-import fetch from 'node-fetch';
-import twilio from 'twilio';
-
+const express = require('express');
+const fetch = require('node-fetch');
+const twilio = require('twilio');
 const { VoiceResponse } = twilio;
 
 const app = express();
@@ -46,8 +45,3 @@ app.listen(port, () => {
   console.log(`Servidor corriendo en puerto ${port}`);
 });
 
-
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-});
