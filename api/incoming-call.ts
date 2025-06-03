@@ -19,14 +19,14 @@ const handler = async (req: VercelRequest, res: VercelResponse) => {
   const data = await registerRes.json()
   const call_id = data.call_id
 
-  const sipURI = `sip:${call_id}@5t4n6j0wnrl.sip.livekit.cloud`
+  const sipUri = `sip:${call_id}@st4n6j0wnrl.sip.livekit.cloud`
 
   const twiml = new VoiceResponse()
-  const dial = twiml.dial()
-  dial.sip(sipURI)
+  twiml.dial().sip(sipUri)
 
   res.setHeader('Content-Type', 'text/xml')
   res.status(200).send(twiml.toString())
 }
 
 export default handler
+
