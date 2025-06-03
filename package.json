@@ -1,0 +1,11 @@
+{
+  "name": "retell-zadarma-webhook",
+  "version": "1.0.0",
+  "main": "api/incoming-call.ts",
+  "type": "module",
+  "dependencies": {
+    "@vercel/node": "^3.0.7",
+    "twilio": "^4.10.0",
+    "typescript": "^4.9.5"
+  }
+}
