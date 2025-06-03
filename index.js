@@ -1,7 +1,6 @@
-import express from 'express';
-import { twiml } from 'twilio';
-import dotenv from 'dotenv';
-dotenv.config();
+const express = require('express');
+const { VoiceResponse } = require('twilio').twiml;
+require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -9,7 +8,6 @@ const port = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: false }));
 
 app.post('/', async (req, res) => {
-  const VoiceResponse = twiml.VoiceResponse;
   const response = new VoiceResponse();
 
   response.connect().stream({
@@ -25,6 +23,7 @@ app.post('/', async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server is live on port ${port}`);
+  console.log(`✅ Server listening on port ${port}`);
 });
+
 
