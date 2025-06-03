@@ -1,6 +1,7 @@
 import express from 'express';
 import { config } from 'dotenv';
-import { VoiceResponse } from 'twilio';
+import twilio from 'twilio';
+const { VoiceResponse } = twilio;
 
 config();
 
@@ -18,10 +19,10 @@ app.post('/', (req, res) => {
       api_key: process.env.RETELL_API_KEY
     }
   });
+
   res.type('text/xml');
   res.send(twiml.toString());
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Webhook listening on port ${PORT}`));
-
