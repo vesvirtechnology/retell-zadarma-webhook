@@ -1,7 +1,8 @@
 {
   "functions": {
     "api/incoming-call.ts": {
-      "runtime": "vercel/node"
+      "runtime": "@vercel/node"
     }
   }
 }
+
