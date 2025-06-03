@@ -1,5 +1,5 @@
 {
-  "name": "retell-webhook",
+  "name": "retell-zadarma-webhook",
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
@@ -7,3 +7,4 @@
     "twilio": "^4.15.0"
   }
 }
+
